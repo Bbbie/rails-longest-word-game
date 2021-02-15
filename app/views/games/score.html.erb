@@ -1,0 +1,15 @@
+<div class='container'>
+  <h1>Result</h1>
+  <% if @english_word %>
+    <p>Congrats! <%= @answer %> is a valid english word</p>
+  <% else %>
+    <p><%= @answer %> is not a valid english word</p>
+  <% end %>
+  <%= link_to "Play again", new_path %>
+</div>
+
+
+
+<!-- The word can’t be built out of the original grid
+The word is valid according to the grid, but is not a valid English word
+The word is valid according to the grid and is an English word -->
