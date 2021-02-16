@@ -10,30 +10,21 @@ class GamesController < ApplicationController
   end
 
   def score
-    @answer = params[:answer].upcase
-    @letters = params[:answer].split(//)
-    @grid = params[:letters]
-    @english_word = check_english(@answer)
-    check(@answer) if @english_word
+    @letters = params[:letters].split
+    @word = (params[:word] || "").upcase
+    @included = included?(@word, @letters)
+    @english_word = english_word?(@word)
   end
 
   private
 
-  def check_english(word)
-    # check, if answer is an actual english word in open-uri
-    url = "https://wagon-dictionary.herokuapp.com/#{word}"
-    raw_json = open(url).read
-    json_hash = JSON.parse(raw_json)
-    json_hash["found"]
+  def included?(word, letters)
+    word.chars.all? { |letter| word.count(letter) <= letters.count(letter) }
   end
 
-  def check(answer, letters)
-    letters.each do |letter|
-      if grid.include? letter
-        grid.gsub(letter, "")
-      else
-        return
-      end
-    end
+  def english_word?(word)
+    response = open("https://wagon-dictionary.herokuapp.com/#{word}").read
+    json = JSON.parse(response)
+    json['found']
   end
 end
